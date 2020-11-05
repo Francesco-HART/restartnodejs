@@ -1,12 +1,6 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
-const Config = require("../config.js");
-const Battery = require("./battery");
 const bcrypt = require("bcryptjs");
-const generator = require("generate-password");
-
-const { transporter } = require("../services/transporter");
-const { mailToUser } = require("../services/mail/mail_new_user");
 
 function capitalizeFirstLetter(v) {
   return v.charAt(0).toUpperCase() + v.substr(1);
@@ -33,10 +27,8 @@ const userSchema = new Schema({
 });
 
 userSchema.pre("save", function (next) {
-  // get access to the user model
   const user = this;
 
-  // hash the password
   bcrypt.hash(user.password, 10, function (err, hash) {
     user.password = hash;
     next();
